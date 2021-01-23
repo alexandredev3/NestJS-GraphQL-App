@@ -68,7 +68,7 @@
     // crie um arquivo .eslintrc.json dentro do diretorio de testes.
     // e adicione o "import/no-extraneous-dependencies".
     "import/no-extraneous-dependencies": [
-      "error",
+      "off",
       { "devDependencies": true }
     ],
     "import-helpers/order-imports": [

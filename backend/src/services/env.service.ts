@@ -4,6 +4,9 @@ import * as fs from 'fs';
 interface IEnvData {
   NODE_ENV: string;
 
+  PRIVATE_KEY: string;
+  PUBLIC_KEY: string;
+
   TYPEORM_TYPE: 'postgres';
   TYPEORM_HOST: string;
   TYPEORM_PORT: number;
@@ -19,6 +22,11 @@ interface IGetOrmConfig {
   TYPEORM_NAME: string;
   TYPEORM_PASSWORD: string;
   TYPEORM_DATABASE: string;
+}
+
+interface IGetKey {
+  private_key: string;
+  public_key: string;
 }
 
 export class EnvService {
@@ -54,7 +62,12 @@ export class EnvService {
     };
   }
 
-  public getPort(): number {
-    return 3333;
+  public getKey(): IGetKey {
+    const { PRIVATE_KEY, PUBLIC_KEY } = this.data;
+
+    return {
+      private_key: PRIVATE_KEY,
+      public_key: PUBLIC_KEY,
+    };
   }
 }

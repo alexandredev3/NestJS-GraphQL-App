@@ -35,3 +35,5 @@ lerna-debug.log*
 
 .dev.env
 .test.env
+private-key.pem
+public-key.pem

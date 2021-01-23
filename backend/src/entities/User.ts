@@ -22,6 +22,7 @@ export default class User {
 
   @Column('varchar', { unique: true })
   @Field()
+  @Exclude()
   email: string;
 
   @Field()
