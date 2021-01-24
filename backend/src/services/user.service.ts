@@ -1,48 +1,49 @@
+import { classToClass } from 'class-transformer';
 import { Repository } from 'typeorm';
 
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Inject, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import ICreateUserDTO from '../dtos/ICreateUserDTO';
 import User from '../entities/User';
+import { HashService } from './hash.service';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: Repository<User>
+    @InjectRepository(User) private userRepository: Repository<User>,
+    @Inject(HashService) private hashService: HashService
   ) {}
 
   public async createUser(data: ICreateUserDTO): Promise<User> {
-    const userCreated = this.userRepository.create(data);
+    const { email, name, password } = data;
 
-    await this.userRepository.save(userCreated);
-
-    return userCreated;
-  }
-
-  public async findById(id: string): Promise<User> {
-    const userFound = await this.userRepository.findOne({
-      where: {
-        id,
-      },
-    });
-
-    return userFound;
-  }
-
-  public async findByEmail(email: string): Promise<User> {
-    const userFound = await this.userRepository.findOne({
+    const userExists = await this.userRepository.findOne({
       where: {
         email,
       },
     });
 
-    return userFound;
+    if (userExists) {
+      throw new HttpException('User already exists.', HttpStatus.NOT_FOUND);
+    }
+
+    const passwordHash = await this.hashService.generateHash(password);
+
+    const user = this.userRepository.create({
+      name,
+      email,
+      password: passwordHash,
+    });
+
+    await this.userRepository.save(user);
+
+    return classToClass(user);
   }
 
-  public async findMany(): Promise<User[]> {
+  public async listUsers(): Promise<User[]> {
     const users = await this.userRepository.find();
 
-    return users;
+    return classToClass(users);
   }
 }

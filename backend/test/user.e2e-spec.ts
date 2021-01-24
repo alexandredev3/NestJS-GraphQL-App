@@ -41,14 +41,14 @@ describe('UserResolver', () => {
         .set('Accept', 'application/json')
         .send({
           query: `mutation {
-            create(name: "${name}", email: "${email}", password: "${password}") {
+            createUser(name: "${name}", email: "${email}", password: "${password}") {
               id
               name
             }
           }`,
         });
 
-      const data = JSON.parse(result.text).data.create;
+      const data = JSON.parse(result.text).data.createUser;
       const dataToCompare = {
         id: `${data.id}`,
         name: `${name}`,
@@ -67,7 +67,7 @@ describe('UserResolver', () => {
         .set('Accept', 'application/json')
         .send({
           query: `mutation {
-          create(name: "${name}", email: "${email}", password: "${password}") {
+          createUser(name: "${name}", email: "${email}", password: "${password}") {
             id
             name
           }
@@ -80,7 +80,7 @@ describe('UserResolver', () => {
         .set('Accept', 'application/json')
         .send({
           query: `mutation {
-            create(name: "${name}", email: "${email}", password: "${password}") {
+            createUser(name: "${name}", email: "${email}", password: "${password}") {
               id
               name
             }

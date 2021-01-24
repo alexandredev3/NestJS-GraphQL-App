@@ -1,25 +1,21 @@
 import { classToClass } from 'class-transformer';
 
-import { Inject, HttpException, UseGuards, HttpStatus } from '@nestjs/common';
+import { Inject, UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 
 import { EnsureAuthenticationhGuard } from '../auth/jwt.guard';
 import { CurrentUser, IPayload } from '../decorators/CurrentUser';
 import User from '../entities/User';
-import { HashService } from '../services/hash.service';
 import { UserService } from '../services/user.service';
 
 @Resolver(User)
 export class UserResolver {
-  constructor(
-    @Inject(UserService) private userService: UserService,
-    @Inject(HashService) private hashService: HashService
-  ) {}
+  constructor(@Inject(UserService) private userService: UserService) {}
 
   @UseGuards(EnsureAuthenticationhGuard)
   @Query(() => [User])
   async users(@CurrentUser() payload: IPayload): Promise<User[]> {
-    const users = await this.userService.findMany();
+    const users = await this.userService.listUsers();
 
     console.log(payload);
 
@@ -27,25 +23,17 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  async create(
+  async createUser(
     @Args('name') name: string,
     @Args('email') email: string,
     @Args('password') password: string
   ): Promise<User> {
-    const userExists = await this.userService.findByEmail(email);
-
-    if (userExists) {
-      throw new HttpException('User already exists.', HttpStatus.NOT_FOUND);
-    }
-
-    const passwordHash = await this.hashService.generateHash(password);
-
-    const user = await this.userService.createUser({
+    const user = this.userService.createUser({
       name,
       email,
-      password: passwordHash,
+      password,
     });
 
-    return classToClass(user);
+    return user;
   }
 }

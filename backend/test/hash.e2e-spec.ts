@@ -1,5 +1,6 @@
 import * as faker from 'faker';
 import * as request from 'supertest';
+import { getRepository, Repository } from 'typeorm';
 
 import { INestApplication } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -10,12 +11,11 @@ import User from '../src/entities/User';
 import { OrmModule } from '../src/modules/orm.module';
 import { UserModule } from '../src/modules/user.module';
 import { HashService } from '../src/services/hash.service';
-import { UserService } from '../src/services/user.service';
 
 describe('UserResolver', () => {
   let app: INestApplication;
   let hashService: HashService;
-  let userService: UserService;
+  let userRepository: Repository<User>;
 
   beforeAll(async () => {
     const userModuleTest: TestingModule = await Test.createTestingModule({
@@ -31,7 +31,7 @@ describe('UserResolver', () => {
 
     app = userModuleTest.createNestApplication();
     hashService = userModuleTest.get<HashService>(HashService);
-    userService = userModuleTest.get<UserService>(UserService);
+    userRepository = getRepository(User);
     await app.init();
   });
 
@@ -41,22 +41,24 @@ describe('UserResolver', () => {
       const randomEmail = faker.internet.email();
       const randomPassword = faker.internet.password(12);
 
-      const result = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/graphql')
         .type('form')
         .set('Accept', 'application/json')
         .send({
           query: `mutation {
-            create(name: "${randomName}", email: "${randomEmail}", password: "${randomPassword}") {
+            createUser(name: "${randomName}", email: "${randomEmail}", password: "${randomPassword}") {
               id
               name
             }
           }`,
         });
 
-      const data = JSON.parse(result.text).data.create;
-
-      const { password } = await userService.findById(data.id);
+      const { password } = await userRepository.findOne({
+        where: {
+          email: randomEmail,
+        },
+      });
 
       const hashCompare = await hashService.compareHash(
         randomPassword,
