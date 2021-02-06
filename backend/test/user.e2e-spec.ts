@@ -2,30 +2,16 @@ import * as faker from 'faker';
 import * as request from 'supertest';
 
 import { INestApplication } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
-import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
-import User from '../src/entities/User';
-import { OrmModule } from '../src/modules/orm.module';
-import { UserModule } from '../src/modules/user.module';
+import appModuleTest from './helpers/appModuleTest';
 
 describe('UserResolver', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
-    const userModuleTest: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forFeature([User]),
-        OrmModule,
-        UserModule,
-        GraphQLModule.forRoot({
-          autoSchemaFile: 'schema.sql',
-        }),
-      ],
-    }).compile();
+    const appModule = await appModuleTest();
 
-    app = userModuleTest.createNestApplication();
+    app = appModule.createNestApplication();
     await app.init();
   });
 

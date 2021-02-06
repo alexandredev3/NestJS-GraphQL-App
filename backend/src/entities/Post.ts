@@ -1,44 +1,41 @@
-import { Exclude } from 'class-transformer';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
+  ManyToOne,
   JoinColumn,
 } from 'typeorm';
 
-import { Field, ObjectType } from '@nestjs/graphql';
+import { ObjectType, Field } from '@nestjs/graphql';
 
-import Post from './Post';
+import User from './User';
 
+@Entity('posts')
 @ObjectType()
-@Entity('users')
-export default class User {
+export default class Post {
   @Field()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Field()
   @Column('varchar')
-  name: string;
-
-  @Column('varchar', { unique: true })
-  @Field()
-  @Exclude()
-  email: string;
+  title: string;
 
   @Field()
-  @Column({ type: 'varchar' })
-  @Exclude()
-  password: string;
+  @Column('varchar')
+  description: string;
 
-  @OneToMany(() => Post, (post) => post.user, {
+  @ManyToOne(() => User, (user) => user.post, {
     cascade: ['insert', 'update'],
   })
   @JoinColumn({ name: 'author_id' })
-  post: Post[];
+  user: User;
+
+  @Field()
+  @Column('uuid')
+  author_id: string;
 
   @Field()
   @CreateDateColumn()

@@ -25,37 +25,44 @@ export class AuthService {
   async authetication(data: ISessionDTO): Promise<IResponse> {
     const { email, password } = data;
 
-    const user = await this.userRepository.findOne({
-      where: {
-        email,
-      },
-    });
+    try {
+      const user = await this.userRepository.findOne({
+        where: {
+          email,
+        },
+      });
 
-    const { id, name } = user;
+      const { id, name } = user;
 
-    if (!user) {
-      throw new HttpException('User does not exists.', HttpStatus.NOT_FOUND);
-    }
+      if (!user) {
+        throw new HttpException('User does not exists.', HttpStatus.NOT_FOUND);
+      }
 
-    const hashCompare = await this.hashService.compareHash(
-      password,
-      user.password
-    );
+      const hashCompare = await this.hashService.compareHash(
+        password,
+        user.password
+      );
 
-    if (!hashCompare) {
+      if (!hashCompare) {
+        throw new HttpException(
+          'Password does not match',
+          HttpStatus.UNAUTHORIZED
+        );
+      }
+
+      const token = this.generateToken(id);
+
+      return {
+        id,
+        name,
+        token,
+      };
+    } catch {
       throw new HttpException(
-        'Password does not match',
-        HttpStatus.UNAUTHORIZED
+        'an error occurred during authentication',
+        HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
-
-    const token = this.generateToken(id);
-
-    return {
-      id,
-      name,
-      token,
-    };
   }
 
   generateToken(id: string): string {

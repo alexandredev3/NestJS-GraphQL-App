@@ -14,7 +14,7 @@ export class UserResolver {
 
   @UseGuards(EnsureAuthenticationhGuard)
   @Query(() => [User])
-  async users(@CurrentUser() payload: IPayload): Promise<User[]> {
+  async getUsers(@CurrentUser() payload: IPayload): Promise<User[]> {
     const users = await this.userService.listUsers();
 
     console.log(payload);
