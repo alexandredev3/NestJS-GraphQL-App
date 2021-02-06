@@ -5,11 +5,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
   JoinColumn,
+  JoinTable,
 } from 'typeorm';
 
 import { ObjectType, Field } from '@nestjs/graphql';
 
+import Like from './Like';
 import User from './User';
 
 @Entity('posts')
@@ -27,11 +30,24 @@ export default class Post {
   @Column('varchar')
   description: string;
 
-  @ManyToOne(() => User, (user) => user.post, {
+  @Field()
+  @Column('decimal', { default: 0 })
+  likes_count: number;
+
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.posts, {
     cascade: ['insert', 'update'],
   })
   @JoinColumn({ name: 'author_id' })
   user: User;
+
+  @Field(() => [Like])
+  @OneToMany(() => Like, (like) => like.posts, {
+    cascade: ['insert', 'update'],
+  })
+  @JoinColumn({ name: 'post_id' })
+  @JoinTable()
+  likes: Like[];
 
   @Field()
   @Column('uuid')

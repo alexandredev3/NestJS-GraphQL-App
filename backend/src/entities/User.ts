@@ -11,6 +11,7 @@ import {
 
 import { Field, ObjectType } from '@nestjs/graphql';
 
+import Like from './Like';
 import Post from './Post';
 
 @ObjectType()
@@ -29,7 +30,6 @@ export default class User {
   @Exclude()
   email: string;
 
-  @Field()
   @Column({ type: 'varchar' })
   @Exclude()
   password: string;
@@ -38,7 +38,13 @@ export default class User {
     cascade: ['insert', 'update'],
   })
   @JoinColumn({ name: 'author_id' })
-  post: Post[];
+  posts: Post[];
+
+  @OneToMany(() => Like, (like) => like.user, {
+    cascade: ['insert', 'update'],
+  })
+  @JoinColumn({ name: 'user_id' })
+  like: Like[];
 
   @Field()
   @CreateDateColumn()

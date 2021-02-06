@@ -6,6 +6,9 @@ type Post {
   id: String!
   title: String!
   description: String!
+  likes_count: Float!
+  user: User!
+  likes: [Like!]!
   author_id: String!
   created_at: DateTime!
   updated_at: DateTime!
@@ -16,11 +19,19 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Like {
+  id: String!
+  post_id: String!
+  user_id: String!
+  posts: Post!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
 type User {
   id: String!
   name: String!
   email: String!
-  password: String!
   created_at: DateTime!
   updated_at: DateTime!
 }
@@ -35,6 +46,14 @@ type Session {
   token: String!
 }
 
+type CreateLikeType {
+  message: String!
+}
+
+type DeleteLikeType {
+  message: String!
+}
+
 type Query {
   getUsers: [User!]!
   getPosts: [Post!]!
@@ -44,4 +63,6 @@ type Mutation {
   createUser(password: String!, email: String!, name: String!): User!
   session(password: String!, email: String!): Session!
   createPost(description: String!, title: String!): Post!
+  createLike(post_id: String!): CreateLikeType!
+  deleteLike(post_id: String!): DeleteLikeType!
 }

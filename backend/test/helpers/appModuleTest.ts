@@ -1,9 +1,7 @@
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
-import User from '../../src/entities/User';
 import { AuthModule } from '../../src/modules/auth.module';
 import { OrmModule } from '../../src/modules/orm.module';
 import { PostModule } from '../../src/modules/post.module';
@@ -15,7 +13,6 @@ export default async function appModuleTest(): Promise<TestingModule> {
       ConfigModule.forRoot({
         envFilePath: '.test.env',
       }),
-      TypeOrmModule.forFeature([User]),
       OrmModule,
       UserModule,
       AuthModule,

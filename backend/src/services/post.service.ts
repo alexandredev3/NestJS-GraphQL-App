@@ -30,7 +30,10 @@ export class PostService {
   }
 
   public async getPosts(): Promise<Post[]> {
-    const posts = await this.postRepository.find();
+    const posts = await this.postRepository
+      .createQueryBuilder('posts')
+      .loadRelationCountAndMap('posts.likes_count', 'posts.likes')
+      .getMany();
 
     return posts;
   }
