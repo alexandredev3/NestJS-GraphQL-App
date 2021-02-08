@@ -34,6 +34,7 @@ export default class User {
   @Exclude()
   password: string;
 
+  @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.user, {
     cascade: ['insert', 'update'],
   })

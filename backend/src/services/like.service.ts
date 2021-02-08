@@ -13,6 +13,17 @@ export class LikeService {
     @InjectRepository(Like) private likeRepository: Repository<Like>
   ) {}
 
+  public async getUsersLiked(post_id: string): Promise<Like[] | null> {
+    const likes = await this.likeRepository.find({
+      where: {
+        post_id,
+      },
+      relations: ['user'],
+    });
+
+    return likes;
+  }
+
   public async createLike(data: ICreateLikeDTO): Promise<void> {
     const { user_id, post_id } = data;
 

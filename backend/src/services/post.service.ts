@@ -1,3 +1,4 @@
+import { classToClass } from 'class-transformer';
 import { Repository } from 'typeorm';
 
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
@@ -32,9 +33,10 @@ export class PostService {
   public async getPosts(): Promise<Post[]> {
     const posts = await this.postRepository
       .createQueryBuilder('posts')
+      .leftJoinAndSelect('posts.user', 'user')
       .loadRelationCountAndMap('posts.likes_count', 'posts.likes')
       .getMany();
 
-    return posts;
+    return classToClass(posts);
   }
 }

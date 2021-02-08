@@ -23,7 +23,7 @@ type Like {
   id: String!
   post_id: String!
   user_id: String!
-  posts: Post!
+  user: User!
   created_at: DateTime!
   updated_at: DateTime!
 }
@@ -32,6 +32,7 @@ type User {
   id: String!
   name: String!
   email: String!
+  posts: [Post!]!
   created_at: DateTime!
   updated_at: DateTime!
 }
@@ -56,7 +57,9 @@ type DeleteLikeType {
 
 type Query {
   getUsers: [User!]!
+  getUnique(user_id: String!): User!
   getPosts: [Post!]!
+  getUsersLiked(post_id: String!): [Like!]!
 }
 
 type Mutation {

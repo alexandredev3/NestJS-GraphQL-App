@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AuthModule } from './auth.module';
+import { LikeModule } from './like.module';
 import { OrmModule } from './orm.module';
 import { PostModule } from './post.module';
 import { UserModule } from './user.module';
@@ -20,6 +21,7 @@ import { UserModule } from './user.module';
     UserModule,
     AuthModule,
     PostModule,
+    LikeModule,
   ],
 })
 export class AppModule {}

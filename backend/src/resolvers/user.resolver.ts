@@ -4,7 +4,6 @@ import { Inject, UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 
 import { EnsureAuthenticationhGuard } from '../auth/jwt.guard';
-import { CurrentUser, IPayload } from '../decorators/CurrentUser';
 import User from '../entities/User';
 import { UserService } from '../services/user.service';
 
@@ -14,10 +13,16 @@ export class UserResolver {
 
   @UseGuards(EnsureAuthenticationhGuard)
   @Query(() => [User])
-  async getUsers(@CurrentUser() payload: IPayload): Promise<User[]> {
-    const users = await this.userService.listUsers();
+  async getUsers(): Promise<User[]> {
+    const users = await this.userService.getUsers();
 
-    console.log(payload);
+    return classToClass(users);
+  }
+
+  @UseGuards(EnsureAuthenticationhGuard)
+  @Query(() => User)
+  async getUnique(@Args('user_id') user_id: string): Promise<User> {
+    const users = await this.userService.getUniqueUser(user_id);
 
     return classToClass(users);
   }

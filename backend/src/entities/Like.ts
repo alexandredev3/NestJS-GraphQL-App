@@ -4,7 +4,6 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
   JoinColumn,
   ManyToOne,
   JoinTable,
@@ -30,13 +29,13 @@ export default class Like {
   @Column('uuid')
   user_id: string;
 
-  @OneToMany(() => User, (user) => user.like, {
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.like, {
     cascade: ['insert', 'update'],
   })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Field(() => Post)
   @ManyToOne(() => Post, (post) => post.likes, {
     cascade: ['insert', 'update'],
   })
