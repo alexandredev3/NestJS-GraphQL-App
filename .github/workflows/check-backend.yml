@@ -33,9 +33,9 @@ jobs:
         working-directory: ./backend
         run: docker-compose up -d postgres
 
-      - name: Run migration:run:test script
+      - name: Run migrations
         working-directory: ./backend
-        run: yarn migration:run:test
+        run: yarn --frozen-lockfile
 
       - name: Tests
         working-directory: ./backend
