@@ -16,10 +16,21 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type UserType {
+  id: String!
+  name: String!
+}
+
+type Session {
+  user: UserType!
+  token: String!
+}
+
 type Query {
   users: [User!]!
 }
 
 type Mutation {
   createUser(password: String!, email: String!, name: String!): User!
+  session(password: String!, email: String!): Session!
 }
