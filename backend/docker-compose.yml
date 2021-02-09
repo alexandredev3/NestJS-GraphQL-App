@@ -18,6 +18,8 @@ services:
 
   postgres:
     image: postgres:latest
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       POSTGRES_PASSWORD: 'docker'
     ports:
