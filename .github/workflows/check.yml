@@ -20,8 +20,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-
-      - run: cd backend
+          
+      working-directory: ./backend
 
       - run: yarn --frozen-lockfile
         name: Install dependencies
