@@ -5,9 +5,14 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
+  JoinColumn,
 } from 'typeorm';
 
 import { Field, ObjectType } from '@nestjs/graphql';
+
+import Like from './Like';
+import Post from './Post';
 
 @ObjectType()
 @Entity('users')
@@ -25,10 +30,22 @@ export default class User {
   @Exclude()
   email: string;
 
-  @Field()
   @Column({ type: 'varchar' })
   @Exclude()
   password: string;
+
+  @Field(() => [Post])
+  @OneToMany(() => Post, (post) => post.user, {
+    cascade: ['insert', 'update'],
+  })
+  @JoinColumn({ name: 'author_id' })
+  posts: Post[];
+
+  @OneToMany(() => Like, (like) => like.user, {
+    cascade: ['insert', 'update'],
+  })
+  @JoinColumn({ name: 'user_id' })
+  like: Like[];
 
   @Field()
   @CreateDateColumn()

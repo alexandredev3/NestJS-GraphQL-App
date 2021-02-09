@@ -25,7 +25,7 @@ export class UserService {
     });
 
     if (userExists) {
-      throw new HttpException('User already exists.', HttpStatus.NOT_FOUND);
+      throw new HttpException('User already exists.', HttpStatus.BAD_REQUEST);
     }
 
     const passwordHash = await this.hashService.generateHash(password);
@@ -41,9 +41,24 @@ export class UserService {
     return classToClass(user);
   }
 
-  public async listUsers(): Promise<User[]> {
+  public async getUsers(): Promise<User[]> {
     const users = await this.userRepository.find();
 
     return classToClass(users);
+  }
+
+  public async getUniqueUser(user_id: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: user_id,
+      },
+      relations: ['posts'],
+    });
+
+    if (!user) {
+      throw new HttpException('User does not exists.', HttpStatus.BAD_REQUEST);
+    }
+
+    return user;
   }
 }
