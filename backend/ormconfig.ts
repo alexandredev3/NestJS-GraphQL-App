@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const { resolve } = require('path');
 
 dotenv.config({
-  path: '.dev.env',
+  path: process.env.NODE_ENV === 'test' ? '.test.env' : '.dev.env',
 });
 
 module.exports = {

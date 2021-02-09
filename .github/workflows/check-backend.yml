@@ -33,6 +33,10 @@ jobs:
         working-directory: ./backend
         run: docker-compose up -d postgres
 
+      - name: Run migrations
+        working-directory: ./backend
+        run: yarn migration:run:test
+
       - name: Tests
         working-directory: ./backend
         run: yarn test:e2e
