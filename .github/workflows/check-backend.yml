@@ -35,7 +35,7 @@ jobs:
 
       - name: Run migrations
         working-directory: ./backend
-        run: yarn --frozen-lockfile
+        run: yarn migration:run:test
 
       - name: Tests
         working-directory: ./backend
