@@ -1,0 +1,42 @@
+name: check backend
+
+on:
+  push:
+    branches:
+      '*'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.JS ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: yarn --frozen-lockfile
+
+      - name: Lint
+        working-directory: ./backend
+        run: yarn lint
+
+      - name: Start infrastructure
+        working-directory: ./backend
+        run: docker-compose up -d postgres
+
+      - name: Tests
+        working-directory: ./backend
+        run: yarn test:e2e
+
+      - name: Dispose infrastructure
+        working-directory: ./backend
+        run: docker-compose down
