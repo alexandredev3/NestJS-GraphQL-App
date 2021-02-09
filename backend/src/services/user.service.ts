@@ -25,7 +25,7 @@ export class UserService {
     });
 
     if (userExists) {
-      throw new HttpException('User already exists.', HttpStatus.NOT_FOUND);
+      throw new HttpException('User already exists.', HttpStatus.BAD_REQUEST);
     }
 
     const passwordHash = await this.hashService.generateHash(password);

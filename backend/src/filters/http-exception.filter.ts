@@ -14,7 +14,7 @@ export class HttpExceptionFilter implements GqlExceptionFilter {
     const { message } = exception;
     const { headers } = request;
 
-    return response.status(status).header(headers).json({
+    return response.status(status).set(headers).json({
       code: status,
       message,
       timestamps: new Date().toISOString(),

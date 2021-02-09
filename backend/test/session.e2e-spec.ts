@@ -55,4 +55,8 @@ describe('Session Resolver', () => {
       expect(data).toHaveProperty('token');
     });
   });
+
+  afterAll(async () => {
+    await app.close();
+  });
 });
