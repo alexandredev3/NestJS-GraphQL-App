@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class createPosts1612475921179 implements MigrationInterface {
+export class createComments1612904087192 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'posts',
+        name: 'comments_posts',
         columns: [
           {
             name: 'id',
@@ -14,26 +14,16 @@ export class createPosts1612475921179 implements MigrationInterface {
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'title',
-            type: 'varchar',
-          },
-          {
-            name: 'description',
-            type: 'varchar',
-          },
-          {
-            name: 'likes_count',
-            type: 'decimal',
-            default: 0,
-          },
-          {
-            name: 'comments_count',
-            type: 'decimal',
-            default: 0,
-          },
-          {
-            name: 'author_id',
+            name: 'user_id',
             type: 'uuid',
+          },
+          {
+            name: 'post_id',
+            type: 'uuid',
+          },
+          {
+            name: 'content',
+            type: 'varchar',
           },
           {
             name: 'created_at',
@@ -46,11 +36,20 @@ export class createPosts1612475921179 implements MigrationInterface {
             default: 'now()',
           },
         ],
+
         foreignKeys: [
           {
-            name: 'author_id',
-            columnNames: ['author_id'],
+            name: 'user_id',
+            columnNames: ['user_id'],
             referencedTableName: 'users',
+            referencedColumnNames: ['id'],
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE',
+          },
+          {
+            name: 'post_id',
+            columnNames: ['post_id'],
+            referencedTableName: 'posts',
             referencedColumnNames: ['id'],
             onUpdate: 'CASCADE',
             onDelete: 'CASCADE',
@@ -61,6 +60,6 @@ export class createPosts1612475921179 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('posts');
+    await queryRunner.dropTable('comments_posts');
   }
 }

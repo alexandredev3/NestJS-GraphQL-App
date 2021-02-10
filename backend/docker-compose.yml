@@ -7,6 +7,7 @@ services:
     command: yarn start:dev
     depends_on:
       - postgres
+      - migrationsDev
     ports:
       - "3333:3333"
       - "9229:9229"
@@ -16,10 +17,24 @@ services:
     networks:
       - nest-api
 
+  migrationsDev:
+    image: node:fermium-alpine
+    command: yarn migration:run:dev
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/app
+    working_dir: /app
+    networks:
+      - nest-api
+
   postgres:
     image: postgres:latest
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./src/database/sql/devDatabase.sql:/docker-entrypoint-initdb.d/devDatabase.sql
+      - ./src/database/sql/testDatabase.sql:/docker-entrypoint-initdb.d/testDatabase.sql
     environment:
       POSTGRES_PASSWORD: 'docker'
     ports:

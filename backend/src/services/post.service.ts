@@ -14,7 +14,13 @@ export class PostService {
   ) {}
 
   public async createPost(data: ICreatePostDTO): Promise<Post> {
-    const post = this.postRepository.create(data);
+    const { author_id, title, description } = data;
+
+    const post = this.postRepository.create({
+      author_id,
+      title,
+      description,
+    });
 
     try {
       await this.postRepository.save(post);
@@ -23,10 +29,7 @@ export class PostService {
     } catch (error) {
       console.log(error);
 
-      throw new HttpException(
-        'INTERNAL_ERROR',
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
+      throw new HttpException('UNEXPECTED ERROR', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -35,6 +38,7 @@ export class PostService {
       .createQueryBuilder('posts')
       .leftJoinAndSelect('posts.user', 'user')
       .loadRelationCountAndMap('posts.likes_count', 'posts.likes')
+      .loadRelationCountAndMap('posts.comments_count', 'posts.comments')
       .getMany();
 
     return classToClass(posts);

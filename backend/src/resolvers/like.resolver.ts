@@ -50,8 +50,6 @@ export class LikeResolver {
   ): Promise<DeleteLikeType> {
     const { id } = payload.user;
 
-    console.log(payload);
-
     await this.likeService.deleteLike({
       user_id: id,
       post_id,

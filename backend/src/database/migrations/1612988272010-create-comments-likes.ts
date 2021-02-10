@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class createPosts1612475921179 implements MigrationInterface {
+export class createCommentsLikes1612988272010 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'posts',
+        name: 'comments_likes',
         columns: [
           {
             name: 'id',
@@ -14,25 +14,11 @@ export class createPosts1612475921179 implements MigrationInterface {
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'title',
-            type: 'varchar',
+            name: 'post_id',
+            type: 'uuid',
           },
           {
-            name: 'description',
-            type: 'varchar',
-          },
-          {
-            name: 'likes_count',
-            type: 'decimal',
-            default: 0,
-          },
-          {
-            name: 'comments_count',
-            type: 'decimal',
-            default: 0,
-          },
-          {
-            name: 'author_id',
+            name: 'user_id',
             type: 'uuid',
           },
           {
@@ -48,8 +34,16 @@ export class createPosts1612475921179 implements MigrationInterface {
         ],
         foreignKeys: [
           {
-            name: 'author_id',
-            columnNames: ['author_id'],
+            name: 'post_id',
+            columnNames: ['post_id'],
+            referencedTableName: 'posts',
+            referencedColumnNames: ['id'],
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE',
+          },
+          {
+            name: 'user_id',
+            columnNames: ['user_id'],
             referencedTableName: 'users',
             referencedColumnNames: ['id'],
             onUpdate: 'CASCADE',
@@ -61,6 +55,6 @@ export class createPosts1612475921179 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('posts');
+    await queryRunner.dropTable('comments_likes');
   }
 }

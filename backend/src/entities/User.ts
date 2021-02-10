@@ -11,6 +11,7 @@ import {
 
 import { Field, ObjectType } from '@nestjs/graphql';
 
+import Comment from './Comment';
 import Like from './Like';
 import Post from './Post';
 
@@ -45,7 +46,13 @@ export default class User {
     cascade: ['insert', 'update'],
   })
   @JoinColumn({ name: 'user_id' })
-  like: Like[];
+  likes: Like[];
+
+  @OneToMany(() => Comment, (comment) => comment.user, {
+    cascade: ['insert', 'update'],
+  })
+  @JoinColumn({ name: 'user_id' })
+  comments: Comment[];
 
   @Field()
   @CreateDateColumn()

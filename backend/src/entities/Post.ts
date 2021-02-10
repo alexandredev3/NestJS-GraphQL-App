@@ -12,6 +12,7 @@ import {
 
 import { ObjectType, Field } from '@nestjs/graphql';
 
+import Comment from './Comment';
 import Like from './Like';
 import User from './User';
 
@@ -34,6 +35,10 @@ export default class Post {
   @Column('decimal', { default: 0 })
   likes_count: number;
 
+  @Field()
+  @Column('decimal', { default: 0 })
+  comments_count: number;
+
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.posts, {
     cascade: ['insert', 'update'],
@@ -48,6 +53,14 @@ export default class Post {
   @JoinColumn({ name: 'post_id' })
   @JoinTable()
   likes: Like[];
+
+  @Field(() => [Comment])
+  @OneToMany(() => Comment, (comment) => comment.posts, {
+    cascade: ['insert', 'update'],
+  })
+  @JoinColumn({ name: 'post_id' })
+  @JoinTable()
+  comments: Comment[];
 
   @Field()
   @Column('uuid')

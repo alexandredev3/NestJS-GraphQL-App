@@ -15,8 +15,8 @@ import Post from './Post';
 import User from './User';
 
 @ObjectType()
-@Entity('posts_likes')
-export default class Like {
+@Entity('comments_posts')
+export default class Comment {
   @Field()
   @PrimaryGeneratedColumn()
   id: string;
@@ -29,14 +29,18 @@ export default class Like {
   @Column('uuid')
   user_id: string;
 
+  @Field()
+  @Column('varchar')
+  content: string;
+
   @Field(() => User)
-  @ManyToOne(() => User, (user) => user.likes, {
+  @ManyToOne(() => User, (user) => user.comments, {
     cascade: ['insert', 'update'],
   })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Post, (post) => post.likes, {
+  @ManyToOne(() => Post, (post) => post.comments, {
     cascade: ['insert', 'update'],
   })
   @JoinColumn({ name: 'post_id' })

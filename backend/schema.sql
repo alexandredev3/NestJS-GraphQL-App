@@ -2,14 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Post {
+type Like {
   id: String!
-  title: String!
-  description: String!
-  likes_count: Float!
+  post_id: String!
+  user_id: String!
   user: User!
-  likes: [Like!]!
-  author_id: String!
   created_at: DateTime!
   updated_at: DateTime!
 }
@@ -19,10 +16,25 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Like {
+type Post {
+  id: String!
+  title: String!
+  description: String!
+  likes_count: Float!
+  comments_count: Float!
+  user: User!
+  likes: [Like!]!
+  comments: [Comment!]!
+  author_id: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+type Comment {
   id: String!
   post_id: String!
   user_id: String!
+  content: String!
   user: User!
   created_at: DateTime!
   updated_at: DateTime!
@@ -60,6 +72,7 @@ type Query {
   getUnique(user_id: String!): User!
   getPosts: [Post!]!
   getUsersLiked(post_id: String!): [Like!]!
+  getComments(post_id: String!): [Comment!]!
 }
 
 type Mutation {
@@ -68,4 +81,5 @@ type Mutation {
   createPost(description: String!, title: String!): Post!
   createLike(post_id: String!): CreateLikeType!
   deleteLike(post_id: String!): DeleteLikeType!
+  createComment(content: String!, post_id: String!): Comment!
 }
