@@ -49,13 +49,13 @@ export class CommentLikeResolver {
   @Mutation(() => DeleteLikeType)
   async deleteCommentLike(
     @CurrentUser() payload: IPayload,
-    @Args('comment_id') comment_id: string
+    @Args('comment_like_id') comment_like_id: string
   ): Promise<DeleteLikeType> {
     const { id } = payload.user;
 
     await this.commentLikeService.deleteCommentLike({
       user_id: id,
-      comment_id,
+      comment_like_id,
     });
 
     return {

@@ -64,12 +64,11 @@ export class CommentLikeService {
   }
 
   public async deleteCommentLike(data: IDeleteCommentLikeDTO): Promise<void> {
-    const { user_id, comment_id } = data;
+    const { user_id, comment_like_id } = data;
 
     const commentLike = await this.commentLikeRepository.findOne({
       where: {
-        comment_id,
-        user_id,
+        id: comment_like_id,
       },
     });
 

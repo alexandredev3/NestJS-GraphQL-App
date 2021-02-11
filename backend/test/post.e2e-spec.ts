@@ -24,11 +24,11 @@ describe('Post Resolver', () => {
       .set('Accept', 'aplication/json')
       .send({
         query: `mutation {
-        createUser(name: "${randomName}", email: "${randomEmail}", password: "${randomPassword}") {
-          id
-          name
-        }
-      }`,
+          createUser(name: "${randomName}", email: "${randomEmail}", password: "${randomPassword}") {
+            id
+            name
+          }
+        }`,
       });
 
     const sessionResult = await request(app.getHttpServer())

@@ -49,13 +49,13 @@ export class PostLikeResolver {
   @Mutation(() => DeleteLikeType)
   async deletePostLike(
     @CurrentUser() payload: IPayload,
-    @Args('post_id') post_id: string
+    @Args('post_like_id') post_like_id: string
   ): Promise<DeleteLikeType> {
     const { id } = payload.user;
 
     await this.postLikeService.deletePostLike({
       user_id: id,
-      post_id,
+      post_like_id,
     });
 
     return {

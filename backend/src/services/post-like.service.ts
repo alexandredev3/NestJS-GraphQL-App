@@ -57,12 +57,11 @@ export class PostLikeService {
   }
 
   public async deletePostLike(data: IDeletePostLikeDTO): Promise<void> {
-    const { user_id, post_id } = data;
+    const { user_id, post_like_id } = data;
 
     const postLike = await this.postLikeRepository.findOne({
       where: {
-        user_id,
-        post_id,
+        id: post_like_id,
       },
     });
 

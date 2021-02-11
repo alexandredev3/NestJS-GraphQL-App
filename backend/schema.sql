@@ -91,5 +91,5 @@ type Mutation {
   session(password: String!, email: String!): Session!
   createPost(description: String!, title: String!): Post!
   createPostLike(post_id: String!): CreateLikeType!
-  deletePostLike(post_id: String!): DeleteLikeType!
+  deletePostLike(post_like_id: String!): DeleteLikeType!
 }
