@@ -7,18 +7,16 @@ import {
   JoinColumn,
   ManyToOne,
   JoinTable,
-  OneToMany,
 } from 'typeorm';
 
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import CommentLike from './CommentLike';
 import Post from './Post';
 import User from './User';
 
 @ObjectType()
-@Entity('comments_posts')
-export default class Comment {
+@Entity('posts_likes')
+export default class PostLike {
   @Field()
   @PrimaryGeneratedColumn()
   id: string;
@@ -31,34 +29,19 @@ export default class Comment {
   @Column('uuid')
   user_id: string;
 
-  @Field()
-  likes_count: number;
-
-  @Field()
-  @Column('varchar')
-  content: string;
-
   @Field(() => User)
-  @ManyToOne(() => User, (user) => user.comments, {
+  @ManyToOne(() => User, (user) => user.likes, {
     cascade: ['insert', 'update'],
   })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Post, (post) => post.comments, {
+  @ManyToOne(() => Post, (post) => post.likes, {
     cascade: ['insert', 'update'],
   })
   @JoinColumn({ name: 'post_id' })
   @JoinTable()
   posts: Post;
-
-  @Field(() => [CommentLike])
-  @OneToMany(() => CommentLike, (like) => like.comments, {
-    cascade: ['insert', 'update'],
-  })
-  @JoinColumn({ name: 'post_id' })
-  @JoinTable()
-  likes: CommentLike[];
 
   @Field()
   @CreateDateColumn()

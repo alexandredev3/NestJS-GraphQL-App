@@ -3,8 +3,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AuthModule } from '../../src/modules/auth.module';
-import { LikeModule } from '../../src/modules/like.module';
 import { OrmModule } from '../../src/modules/orm.module';
+import { PostLikeModule } from '../../src/modules/post-like.module';
 import { PostModule } from '../../src/modules/post.module';
 import { UserModule } from '../../src/modules/user.module';
 
@@ -21,7 +21,7 @@ export default async function appModuleTest(): Promise<TestingModule> {
       UserModule,
       AuthModule,
       PostModule,
-      LikeModule,
+      PostLikeModule,
     ],
   }).compile();
 

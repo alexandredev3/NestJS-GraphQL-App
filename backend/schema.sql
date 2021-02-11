@@ -2,9 +2,9 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Like {
+type CommentLike {
   id: String!
-  post_id: String!
+  comment_id: String!
   user_id: String!
   user: User!
   created_at: DateTime!
@@ -16,6 +16,15 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type PostLike {
+  id: String!
+  post_id: String!
+  user_id: String!
+  user: User!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
 type Post {
   id: String!
   title: String!
@@ -23,7 +32,7 @@ type Post {
   likes_count: Float!
   comments_count: Float!
   user: User!
-  likes: [Like!]!
+  likes: [PostLike!]!
   comments: [Comment!]!
   author_id: String!
   created_at: DateTime!
@@ -34,8 +43,10 @@ type Comment {
   id: String!
   post_id: String!
   user_id: String!
+  likes_count: Float!
   content: String!
   user: User!
+  likes: [CommentLike!]!
   created_at: DateTime!
   updated_at: DateTime!
 }
@@ -60,6 +71,7 @@ type Session {
 }
 
 type CreateLikeType {
+  id: String!
   message: String!
 }
 
@@ -71,15 +83,13 @@ type Query {
   getUsers: [User!]!
   getUnique(user_id: String!): User!
   getPosts: [Post!]!
-  getUsersLiked(post_id: String!): [Like!]!
-  getComments(post_id: String!): [Comment!]!
+  getPostLikes(post_id: String!): [PostLike!]!
 }
 
 type Mutation {
   createUser(password: String!, email: String!, name: String!): User!
   session(password: String!, email: String!): Session!
   createPost(description: String!, title: String!): Post!
-  createLike(post_id: String!): CreateLikeType!
-  deleteLike(post_id: String!): DeleteLikeType!
-  createComment(content: String!, post_id: String!): Comment!
+  createPostLike(post_id: String!): CreateLikeType!
+  deletePostLike(post_id: String!): DeleteLikeType!
 }

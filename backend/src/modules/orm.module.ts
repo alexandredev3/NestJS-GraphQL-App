@@ -4,11 +4,14 @@ import { Module, Global, DynamicModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import Comment from '../entities/Comment';
-import Like from '../entities/Like';
+import CommentLike from '../entities/CommentLike';
 import Post from '../entities/Post';
+import PostLike from '../entities/PostLike';
 import User from '../entities/User';
 import { EnvService } from '../services/env.service';
 import { EnvModule } from './env.module';
+
+const entities = [User, Post, PostLike, Comment, CommentLike];
 
 function OrmConfigModule(): DynamicModule {
   const {
@@ -28,7 +31,7 @@ function OrmConfigModule(): DynamicModule {
     password: TYPEORM_PASSWORD,
     database: TYPEORM_DATABASE,
     migrations: [resolve(__dirname, '..', 'database', 'migrations', '*.ts')],
-    entities: [User, Post, Like, Comment],
+    entities,
     cli: {
       migrationsDir: resolve(__dirname, '..', 'database', 'migrations'),
     },

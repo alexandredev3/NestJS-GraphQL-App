@@ -5,54 +5,57 @@ import { Resolver, Args, Mutation, Query } from '@nestjs/graphql';
 
 import { EnsureAuthenticationhGuard } from '../auth/jwt.guard';
 import { CurrentUser, IPayload } from '../decorators/CurrentUser';
-import Like from '../entities/Like';
-import { LikeService } from '../services/like.service';
+import CommentLike from '../entities/CommentLike';
+import { CommentLikeService } from '../services/comment-like.service';
 import CreateLikeType from '../types/createLike.type';
 import DeleteLikeType from '../types/deleteLike.type';
 
-@Resolver(Like)
-export class LikeResolver {
-  constructor(@Inject(LikeService) private likeService: LikeService) {}
+@Resolver(CommentLike)
+export class CommentLikeResolver {
+  constructor(
+    @Inject(CommentLikeService) private commentLikeService: CommentLikeService
+  ) {}
 
   @UseGuards(EnsureAuthenticationhGuard)
-  @Query(() => [Like])
-  async getUsersLiked(
-    @Args('post_id') post_id: string
-  ): Promise<Like[] | null> {
-    const likes = await this.likeService.getUsersLiked(post_id);
+  @Query(() => [CommentLike])
+  async getCommentLikes(
+    @Args('comment_id') comment_id: string
+  ): Promise<CommentLike[] | null> {
+    const likes = await this.commentLikeService.getCommentLikes(comment_id);
 
     return classToClass(likes);
   }
 
   @UseGuards(EnsureAuthenticationhGuard)
   @Mutation(() => CreateLikeType)
-  async createLike(
+  async createCommentLike(
     @CurrentUser() payload: IPayload,
-    @Args('post_id') post_id: string
+    @Args('comment_id') comment_id: string
   ): Promise<CreateLikeType> {
     const { id } = payload.user;
 
-    await this.likeService.createLike({
+    const like = await this.commentLikeService.createCommentLike({
       user_id: id,
-      post_id,
+      comment_id,
     });
 
     return {
+      id: like.id,
       message: 'Like created',
     };
   }
 
   @UseGuards(EnsureAuthenticationhGuard)
   @Mutation(() => DeleteLikeType)
-  async deleteLike(
+  async deleteCommentLike(
     @CurrentUser() payload: IPayload,
-    @Args('post_id') post_id: string
+    @Args('comment_id') comment_id: string
   ): Promise<DeleteLikeType> {
     const { id } = payload.user;
 
-    await this.likeService.deleteLike({
+    await this.commentLikeService.deleteCommentLike({
       user_id: id,
-      post_id,
+      comment_id,
     });
 
     return {

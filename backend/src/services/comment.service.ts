@@ -13,12 +13,11 @@ export class CommentService {
   ) {}
 
   public async getComments(post_id: string): Promise<Comment[]> {
-    const comments = await this.commentRepository.find({
-      where: {
-        post_id,
-      },
-      relations: ['user'],
-    });
+    const comments = await this.commentRepository
+      .createQueryBuilder('comments')
+      .leftJoinAndSelect('comments.user', 'user')
+      .loadRelationCountAndMap('comments.likes_count', 'comments.likes')
+      .getMany();
 
     return comments;
   }

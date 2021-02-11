@@ -3,9 +3,10 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AuthModule } from './auth.module';
+import { CommentLikeModule } from './comment-like.module';
 import { CommentModule } from './comment.module';
-import { LikeModule } from './like.module';
 import { OrmModule } from './orm.module';
+import { PostLikeModule } from './post-like.module';
 import { PostModule } from './post.module';
 import { UserModule } from './user.module';
 
@@ -22,8 +23,9 @@ import { UserModule } from './user.module';
     UserModule,
     AuthModule,
     PostModule,
-    LikeModule,
+    PostLikeModule,
     CommentModule,
+    CommentLikeModule,
   ],
 })
 export class AppModule {}

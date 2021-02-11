@@ -22,11 +22,6 @@ export class createPosts1612475921179 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'likes_count',
-            type: 'decimal',
-            default: 0,
-          },
-          {
             name: 'comments_count',
             type: 'decimal',
             default: 0,

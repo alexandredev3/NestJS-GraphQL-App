@@ -11,19 +11,19 @@ import {
 
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import Post from './Post';
+import Comment from './Comment';
 import User from './User';
 
 @ObjectType()
-@Entity('posts_likes')
-export default class Like {
+@Entity('comments_likes')
+export default class CommentLike {
   @Field()
   @PrimaryGeneratedColumn()
   id: string;
 
   @Field()
   @Column('uuid')
-  post_id: string;
+  comment_id: string;
 
   @Field()
   @Column('uuid')
@@ -36,12 +36,12 @@ export default class Like {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Post, (post) => post.likes, {
+  @ManyToOne(() => Comment, (post) => post.likes, {
     cascade: ['insert', 'update'],
   })
-  @JoinColumn({ name: 'post_id' })
+  @JoinColumn({ name: 'comment_id' })
   @JoinTable()
-  posts: Post;
+  comments: Comment;
 
   @Field()
   @CreateDateColumn()

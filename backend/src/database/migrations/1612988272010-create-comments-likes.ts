@@ -14,7 +14,7 @@ export class createCommentsLikes1612988272010 implements MigrationInterface {
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'post_id',
+            name: 'comment_id',
             type: 'uuid',
           },
           {
@@ -34,9 +34,9 @@ export class createCommentsLikes1612988272010 implements MigrationInterface {
         ],
         foreignKeys: [
           {
-            name: 'post_id',
-            columnNames: ['post_id'],
-            referencedTableName: 'posts',
+            name: 'comment_id',
+            columnNames: ['comment_id'],
+            referencedTableName: 'comments_posts',
             referencedColumnNames: ['id'],
             onUpdate: 'CASCADE',
             onDelete: 'CASCADE',

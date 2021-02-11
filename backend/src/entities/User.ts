@@ -12,8 +12,8 @@ import {
 import { Field, ObjectType } from '@nestjs/graphql';
 
 import Comment from './Comment';
-import Like from './Like';
 import Post from './Post';
+import PostLike from './PostLike';
 
 @ObjectType()
 @Entity('users')
@@ -42,11 +42,11 @@ export default class User {
   @JoinColumn({ name: 'author_id' })
   posts: Post[];
 
-  @OneToMany(() => Like, (like) => like.user, {
+  @OneToMany(() => PostLike, (like) => like.user, {
     cascade: ['insert', 'update'],
   })
   @JoinColumn({ name: 'user_id' })
-  likes: Like[];
+  likes: PostLike[];
 
   @OneToMany(() => Comment, (comment) => comment.user, {
     cascade: ['insert', 'update'],

@@ -13,7 +13,7 @@ import {
 import { ObjectType, Field } from '@nestjs/graphql';
 
 import Comment from './Comment';
-import Like from './Like';
+import PostLike from './PostLike';
 import User from './User';
 
 @Entity('posts')
@@ -32,11 +32,9 @@ export default class Post {
   description: string;
 
   @Field()
-  @Column('decimal', { default: 0 })
   likes_count: number;
 
   @Field()
-  @Column('decimal', { default: 0 })
   comments_count: number;
 
   @Field(() => User)
@@ -46,13 +44,13 @@ export default class Post {
   @JoinColumn({ name: 'author_id' })
   user: User;
 
-  @Field(() => [Like])
-  @OneToMany(() => Like, (like) => like.posts, {
+  @Field(() => [PostLike])
+  @OneToMany(() => PostLike, (like) => like.posts, {
     cascade: ['insert', 'update'],
   })
   @JoinColumn({ name: 'post_id' })
   @JoinTable()
-  likes: Like[];
+  likes: PostLike[];
 
   @Field(() => [Comment])
   @OneToMany(() => Comment, (comment) => comment.posts, {

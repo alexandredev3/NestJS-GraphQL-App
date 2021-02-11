@@ -6,15 +6,11 @@ import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { EnsureAuthenticationhGuard } from '../auth/jwt.guard';
 import { CurrentUser, IPayload } from '../decorators/CurrentUser';
 import Post from '../entities/Post';
-import { LikeService } from '../services/like.service';
 import { PostService } from '../services/post.service';
 
 @Resolver(Post)
 export class PostResolver {
-  constructor(
-    @Inject(PostService) private postService: PostService,
-    @Inject(LikeService) private likeService: LikeService
-  ) {}
+  constructor(@Inject(PostService) private postService: PostService) {}
 
   @UseGuards(EnsureAuthenticationhGuard)
   @Query(() => [Post])
