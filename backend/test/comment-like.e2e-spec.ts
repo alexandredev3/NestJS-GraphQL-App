@@ -2,13 +2,13 @@ import * as request from 'supertest';
 
 import { INestApplication } from '@nestjs/common';
 
-import createRandomPost from './helpers/createRandomPost';
+import createRandomComment from './helpers/createRandomComment';
 import appModuleTest from './modules/appModuleTest';
 
-describe('Post Like Resolver', () => {
+describe('Comment Like Resolver', () => {
   let app: INestApplication;
   let token: string;
-  let postId: string;
+  let commentId: string;
 
   beforeAll(async () => {
     const appModule = await appModuleTest();
@@ -16,127 +16,134 @@ describe('Post Like Resolver', () => {
     app = appModule.createNestApplication();
     await app.init();
 
-    const { authenticationToken, post } = await createRandomPost(app);
+    const { authenticationToken, comment } = await createRandomComment(app);
 
     token = authenticationToken;
-    postId = post.id;
+    commentId = comment.id;
   });
 
   describe('root', () => {
     it('should create a like', async () => {
-      const postLikeResult = await request(app.getHttpServer())
+      const commentLikeResult = await request(app.getHttpServer())
         .post('/graphql')
         .type('form')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${token}`)
         .send({
           query: `mutation {
-            createPostLike(post_id: "${postId}") {
+            createCommentLike(comment_id: "${commentId}") {
               id
               status
             }
           }`,
         });
 
-      const { status } = JSON.parse(postLikeResult.text).data.createPostLike;
+      const { status } = JSON.parse(
+        commentLikeResult.text
+      ).data.createCommentLike;
 
       expect(status).toBe('Like created');
     });
 
     it('should not the user liked a post that this user already liked', async () => {
-      const postLikeResult = await request(app.getHttpServer())
+      const commentLikeResult = await request(app.getHttpServer())
         .post('/graphql')
         .type('form')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${token}`)
         .send({
           query: `mutation {
-            createPostLike(post_id: "${postId}") {
+            createCommentLike(comment_id: "${commentId}") {
               id
               status
             }
           }`,
         });
 
-      const errors = JSON.parse(postLikeResult.text)?.errors as Array<{
+      const errors = JSON.parse(commentLikeResult.text)?.errors as Array<{
         message: string;
       }>;
 
-      const error = errors.find((err) => err.message === 'Post already liked.');
+      const error = errors.find(
+        (err) => err.message === 'Comment already liked.'
+      );
 
-      expect(error.message).toBe('Post already liked.');
+      expect(error.message).toBe('Comment already liked.');
     });
 
     it('should delete a like', async () => {
-      const { authenticationToken, post } = await createRandomPost(app);
+      const { comment } = await createRandomComment(app);
 
-      const postLikeResult = await request(app.getHttpServer())
+      const commentLikeResult = await request(app.getHttpServer())
         .post('/graphql')
         .type('form')
         .set('Accept', 'application/json')
-        .set('Authorization', `Bearer ${authenticationToken}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           query: `mutation {
-            createPostLike(post_id: "${post.id}") {
+            createCommentLike(comment_id: "${comment.id}") {
               id
               status
             }
           }`,
         });
 
-      const likeCreated = JSON.parse(postLikeResult.text).data.createPostLike;
+      const likeCreated = JSON.parse(commentLikeResult.text).data
+        .createCommentLike;
 
-      const postDeleteLikeResult = await request(app.getHttpServer())
+      const commentDeleteLikeResult = await request(app.getHttpServer())
         .post('/graphql')
         .type('form')
         .set('Accept', 'application/json')
-        .set('Authorization', `Bearer ${authenticationToken}`)
+        .set('Authorization', `Bearer ${token}`)
         .send({
           query: `mutation {
-            deletePostLike(post_like_id: "${likeCreated.id}") {
+            deleteCommentLike(comment_like_id: "${likeCreated.id}") {
               status
             }
           }`,
         });
 
-      const like = JSON.parse(postDeleteLikeResult.text).data.deletePostLike;
+      const like = JSON.parse(commentDeleteLikeResult.text).data
+        .deleteCommentLike;
 
       expect(like.status).toBe('Like successfully deleted');
     });
 
     it('should not the user delete the like of another user', async () => {
-      const { authenticationToken } = await createRandomPost(app);
+      const { authenticationToken } = await createRandomComment(app);
 
-      const postLikeResult = await request(app.getHttpServer())
+      const commentLikeResult = await request(app.getHttpServer())
         .post('/graphql')
         .type('form')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${authenticationToken}`)
         .send({
           query: `mutation {
-            createPostLike(post_id: "${postId}") {
+            createCommentLike(comment_id: "${commentId}") {
               id
               status
             }
           }`,
         });
 
-      const likeCreated = JSON.parse(postLikeResult.text).data.createPostLike;
+      const likeCreated = JSON.parse(commentLikeResult.text).data
+        .createCommentLike;
 
-      const postDeleteLikeResult = await request(app.getHttpServer())
+      const commentDeleteLikeResult = await request(app.getHttpServer())
         .post('/graphql')
         .type('form')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${token}`)
         .send({
           query: `mutation {
-            deletePostLike(post_like_id: "${likeCreated.id}") {
+            deleteCommentLike(comment_like_id: "${likeCreated.id}") {
               status
             }
           }`,
         });
 
-      const errors = JSON.parse(postDeleteLikeResult.text)?.errors as Array<{
+      const errors = JSON.parse(commentDeleteLikeResult.text)?.errors as Array<{
         message: string;
       }>;
 

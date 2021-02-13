@@ -6,7 +6,7 @@ import { INestApplication } from '@nestjs/common';
 
 import User from '../src/entities/User';
 import { HashService } from '../src/services/hash.service';
-import appModuleTest from './helpers/appModuleTest';
+import appModuleTest from './modules/appModuleTest';
 
 describe('User Resolver', () => {
   let app: INestApplication;

@@ -41,7 +41,7 @@ export class CommentLikeResolver {
 
     return {
       id: like.id,
-      message: 'Like created',
+      status: 'Like created',
     };
   }
 
@@ -59,7 +59,7 @@ export class CommentLikeResolver {
     });
 
     return {
-      message: 'Like successfully deleted',
+      status: 'Like successfully deleted',
     };
   }
 }

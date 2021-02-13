@@ -3,7 +3,7 @@ import * as request from 'supertest';
 
 import { INestApplication } from '@nestjs/common';
 
-import appModuleTest from './helpers/appModuleTest';
+import appModuleTest from './modules/appModuleTest';
 
 describe('UserResolver', () => {
   let app: INestApplication;

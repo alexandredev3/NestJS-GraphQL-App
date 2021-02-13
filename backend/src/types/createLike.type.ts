@@ -6,5 +6,5 @@ export default class CreateLikeType {
   id: string;
 
   @Field()
-  message: string;
+  status: string;
 }

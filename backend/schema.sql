@@ -72,11 +72,11 @@ type Session {
 
 type CreateLikeType {
   id: String!
-  message: String!
+  status: String!
 }
 
 type DeleteLikeType {
-  message: String!
+  status: String!
 }
 
 type Query {
@@ -84,6 +84,8 @@ type Query {
   getUnique(user_id: String!): User!
   getPosts: [Post!]!
   getPostLikes(post_id: String!): [PostLike!]!
+  getComments(post_id: String!): [Comment!]!
+  getCommentLikes(comment_id: String!): [CommentLike!]!
 }
 
 type Mutation {
@@ -92,4 +94,7 @@ type Mutation {
   createPost(description: String!, title: String!): Post!
   createPostLike(post_id: String!): CreateLikeType!
   deletePostLike(post_like_id: String!): DeleteLikeType!
+  createComment(content: String!, post_id: String!): Comment!
+  createCommentLike(comment_id: String!): CreateLikeType!
+  deleteCommentLike(comment_like_id: String!): DeleteLikeType!
 }
